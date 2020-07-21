@@ -1,6 +1,7 @@
-package org.academiadecodigo.javabank.domain;
+package org.academiadecodigo.javabank.service;
 
-import org.academiadecodigo.javabank.managers.AccountManager;
+import org.academiadecodigo.javabank.model.domain.Customer;
+import org.academiadecodigo.javabank.service.AccountManager;
 
 import java.util.HashMap;
 import java.util.Set;
@@ -12,6 +13,7 @@ public class Bank {
 
     private AccountManager accountManager;
     private HashMap<Integer, Customer> customers;
+    private int accessingCustomerId;
 
     /**
      * Creates a new instance of {@code Bank}
@@ -82,5 +84,13 @@ public class Bank {
     public void addCustomer(Customer customer) {
         customers.put(customer.getId(), customer);
         customer.setAccountManager(accountManager);
+    }
+
+    public int getAccessingCustomerId() {
+        return accessingCustomerId;
+    }
+
+    public void setAccessingCustomerId(int accessingCustomerId) {
+        this.accessingCustomerId = accessingCustomerId;
     }
 }

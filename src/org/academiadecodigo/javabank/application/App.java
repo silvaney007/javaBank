@@ -1,9 +1,9 @@
-package org.academiadecodigo.javabank;
+package org.academiadecodigo.javabank.application;
 
-import org.academiadecodigo.javabank.application.BankApplication;
-import org.academiadecodigo.javabank.domain.Bank;
-import org.academiadecodigo.javabank.domain.Customer;
-import org.academiadecodigo.javabank.managers.AccountManager;
+import org.academiadecodigo.javabank.controller.LoginController;
+import org.academiadecodigo.javabank.service.Bank;
+import org.academiadecodigo.javabank.model.domain.Customer;
+import org.academiadecodigo.javabank.service.AccountManager;
 
 public class App {
 
@@ -20,7 +20,7 @@ public class App {
         bank.addCustomer(c2);
         bank.addCustomer(c3);
 
-        BankApplication bankApplication = new BankApplication(bank);
-        bankApplication.start();
+        LoginController loginController = new LoginController(bank);
+        loginController.init();
     }
 }

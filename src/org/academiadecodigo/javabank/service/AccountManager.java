@@ -1,25 +1,26 @@
-package org.academiadecodigo.javabank.managers;
+package org.academiadecodigo.javabank.service;
 
-import org.academiadecodigo.javabank.domain.account.Account;
-import org.academiadecodigo.javabank.domain.account.AccountType;
-import org.academiadecodigo.javabank.factories.AccountFactory;
+import org.academiadecodigo.javabank.model.domain.account.Account;
+import org.academiadecodigo.javabank.model.domain.account.AccountType;
+import org.academiadecodigo.javabank.model.domain.account.CheckingAccount;
+import org.academiadecodigo.javabank.model.domain.account.SavingsAccount;
 
 import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Responsible for managing accounts
+ * Responsible for account management
  */
 public class AccountManager {
 
-    private AccountFactory accountFactory = new AccountFactory();
+    private static int numberAccounts = 0;
     private Map<Integer, Account> accountMap;
 
     /**
      * Creates a new {@code AccountManager}
      */
     public AccountManager() {
-        accountMap = new HashMap<>();
+        this.accountMap = new HashMap<>();
     }
 
     /**
@@ -27,10 +28,19 @@ public class AccountManager {
      *
      * @param accountType the account type
      * @return the new account
-     * @see AccountFactory#createAccount(AccountType)
      */
     public Account openAccount(AccountType accountType) {
-        Account newAccount = accountFactory.createAccount(accountType);
+
+        Account newAccount;
+        numberAccounts++;
+
+        if (accountType == AccountType.CHECKING) {
+            newAccount = new CheckingAccount(numberAccounts);
+
+        } else {
+            newAccount = new SavingsAccount(numberAccounts);
+        }
+
         accountMap.put(newAccount.getId(), newAccount);
         return newAccount;
     }
