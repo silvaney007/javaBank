@@ -2,7 +2,7 @@ package org.academiadecodigo.javabank.view;
 
 import org.academiadecodigo.bootcamp.scanners.menu.MenuInputScanner;
 import org.academiadecodigo.javabank.controller.MenuController;
-import org.academiadecodigo.javabank.service.Bank;
+import org.academiadecodigo.javabank.service.CostumerServiceImpl;
 
 public class MenuView extends AbstractView {
 
@@ -13,7 +13,7 @@ public class MenuView extends AbstractView {
     }
 
     @Override
-    public void show(Bank bank) {
+    public void show(CostumerServiceImpl costumerServiceImpl) {
         MenuInputScanner mainMenu = new MenuInputScanner(UserOptions.getMessages());
         mainMenu.setError(Messages.VIEW_MAIN_ERROR);
         mainMenu.setMessage(Messages.VIEW_MAIN_MESSAGE);

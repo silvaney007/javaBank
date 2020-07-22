@@ -3,7 +3,7 @@ package org.academiadecodigo.javabank.controller;
 import org.academiadecodigo.bootcamp.scanners.menu.MenuInputScanner;
 import org.academiadecodigo.javabank.controller.transation.DepositController;
 import org.academiadecodigo.javabank.controller.transation.WithdrawController;
-import org.academiadecodigo.javabank.service.Bank;
+import org.academiadecodigo.javabank.service.CostumerServiceImpl;
 import org.academiadecodigo.javabank.view.MenuView;
 import org.academiadecodigo.javabank.view.UserOptions;
 
@@ -15,14 +15,14 @@ public class MenuController extends AbstractController {
     private MenuView menuView;
     private MenuInputScanner mainMenu;
 
-    public MenuController(Bank bank){
-        super(bank);
+    public MenuController(CostumerServiceImpl costumerServiceImpl){
+        super(costumerServiceImpl);
         menuView = new MenuView(this);
     }
 
     @Override
     public void init() {
-        menuView.show(bank);
+        menuView.show(costumerServiceImpl);
         setOperationsMap(buildOperationsMap());
         menuLoop();
     }
@@ -42,10 +42,10 @@ public class MenuController extends AbstractController {
 
     private Map<Integer, Controllable> buildOperationsMap() {
         Map<Integer, Controllable> map = new HashMap<>();
-        map.put(UserOptions.GET_BALANCE.getOption(), new BalanceController(bank));
-        map.put(UserOptions.DEPOSIT.getOption(), new DepositController(bank));
-        map.put(UserOptions.WITHDRAW.getOption(), new WithdrawController(bank));
-        map.put(UserOptions.OPEN_ACCOUNT.getOption(), new NewAccountController(bank));
+        map.put(UserOptions.GET_BALANCE.getOption(), new BalanceController(costumerServiceImpl));
+        map.put(UserOptions.DEPOSIT.getOption(), new DepositController(costumerServiceImpl));
+        map.put(UserOptions.WITHDRAW.getOption(), new WithdrawController(costumerServiceImpl));
+        map.put(UserOptions.OPEN_ACCOUNT.getOption(), new NewAccountController(costumerServiceImpl));
         return map;
     }
 

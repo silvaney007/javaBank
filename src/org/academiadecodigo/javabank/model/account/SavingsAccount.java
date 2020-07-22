@@ -1,4 +1,4 @@
-package org.academiadecodigo.javabank.model.domain.account;
+package org.academiadecodigo.javabank.model.account;
 
 /**
  * A savings account domain entity which requires a minimum balance
@@ -8,19 +8,11 @@ package org.academiadecodigo.javabank.model.domain.account;
  */
 public class SavingsAccount extends AbstractAccount {
 
+
     /**
      * The minimum balance to maintain on the account
      */
     public static final double MIN_BALANCE = 100;
-
-    /**
-     * Creates a new {@code SavingsAccount} instance
-     *
-     * @see AbstractAccount#AbstractAccount(int)
-     */
-    public SavingsAccount(int id) {
-        super(id);
-    }
 
     /**
      * @see Account#getAccountType()

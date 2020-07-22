@@ -1,22 +1,22 @@
 package org.academiadecodigo.javabank.controller;
 
-import org.academiadecodigo.javabank.service.Bank;
+import org.academiadecodigo.javabank.service.CostumerServiceImpl;
 
 import java.util.Map;
 
 public abstract class AbstractController implements Controllable {
 
-    protected Bank bank;
+    protected CostumerServiceImpl costumerServiceImpl;
     private Map<Integer, Controllable> operationsMap;
 
 
 
-    public AbstractController(Bank bank) {
-        this.bank = bank;
+    public AbstractController(CostumerServiceImpl costumerServiceImpl) {
+        this.costumerServiceImpl = costumerServiceImpl;
     }
 
-    public Bank getBank() {
-        return bank;
+    public CostumerServiceImpl getCostumerServiceImpl() {
+        return costumerServiceImpl;
     }
 
     public Map<Integer, Controllable> getOperationsMap() {

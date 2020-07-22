@@ -38,7 +38,7 @@ Represents the Banking service, contains costumers
 * Customer
 
 ### Customer
-Represents bank customers, contains accounts
+Represents costumerServiceImpl customers, contains accounts
 
 #### Responsibilities
 * add a new account
@@ -64,5 +64,5 @@ Represents a Bank Account, contains money
 * Composition and delegation used with AccountManager containing and performing all account related operations (less responsibility to customer)
 * Account and Customer objects are stored in Map container for quick and convenient access
 * AccountFactory decouples Account usage from Account creation logic
-* Strategy pattern used for executing multiple bank operations and account transaction operations
+* Strategy pattern used for executing multiple costumerServiceImpl operations and account transaction operations
 * Console based user interface implemented using the propmt-view lib

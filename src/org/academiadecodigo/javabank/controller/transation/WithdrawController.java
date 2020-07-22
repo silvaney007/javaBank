@@ -1,7 +1,7 @@
 package org.academiadecodigo.javabank.controller.transation;
 
 import org.academiadecodigo.javabank.controller.AbstractController;
-import org.academiadecodigo.javabank.service.Bank;
+import org.academiadecodigo.javabank.service.CostumerServiceImpl;
 import org.academiadecodigo.javabank.view.AccountTransactionView;
 
 public class WithdrawController extends AbstractController implements TransactionControllable {
@@ -9,18 +9,18 @@ public class WithdrawController extends AbstractController implements Transactio
 
     private AccountTransactionView accountTransactionView;
 
-    public WithdrawController(Bank bank) {
-        super(bank);
+    public WithdrawController(CostumerServiceImpl costumerServiceImpl) {
+        super(costumerServiceImpl);
         accountTransactionView = new AccountTransactionView(this);
     }
 
     @Override
     public void init() {
-        accountTransactionView.show(bank);
+        accountTransactionView.show(costumerServiceImpl);
     }
 
     @Override
     public void submitTransaction(int accountId, double amount) {
-        bank.getAccountManager().withdraw(accountId, amount);
+        costumerServiceImpl.getAccountServiceIml().withdraw(accountId, amount);
     }
 }

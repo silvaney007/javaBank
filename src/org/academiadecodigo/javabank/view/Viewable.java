@@ -1,7 +1,7 @@
 package org.academiadecodigo.javabank.view;
 
-import org.academiadecodigo.javabank.service.Bank;
+import org.academiadecodigo.javabank.service.CostumerServiceImpl;
 
 public interface Viewable {
-    void show(Bank bank);
+    void show(CostumerServiceImpl costumerServiceImpl);
 }

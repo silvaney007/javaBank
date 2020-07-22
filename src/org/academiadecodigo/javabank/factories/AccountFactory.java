@@ -1,9 +1,9 @@
-package org.academiadecodigo.javabank.service;
+package org.academiadecodigo.javabank.factories;
 
-import org.academiadecodigo.javabank.model.domain.account.Account;
-import org.academiadecodigo.javabank.model.domain.account.AccountType;
-import org.academiadecodigo.javabank.model.domain.account.CheckingAccount;
-import org.academiadecodigo.javabank.model.domain.account.SavingsAccount;
+import org.academiadecodigo.javabank.model.account.Account;
+import org.academiadecodigo.javabank.model.account.AccountType;
+import org.academiadecodigo.javabank.model.account.CheckingAccount;
+import org.academiadecodigo.javabank.model.account.SavingsAccount;
 
 /**
  * A factory for creating accounts of different types
@@ -45,3 +45,4 @@ public class AccountFactory {
         return newAccount;
     }
 }
+

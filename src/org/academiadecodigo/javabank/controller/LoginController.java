@@ -1,6 +1,6 @@
 package org.academiadecodigo.javabank.controller;
 
-import org.academiadecodigo.javabank.service.Bank;
+import org.academiadecodigo.javabank.service.CostumerServiceImpl;
 import org.academiadecodigo.javabank.view.LoginView;
 
 public class LoginController extends AbstractController {
@@ -9,15 +9,15 @@ public class LoginController extends AbstractController {
     private LoginView loginView;
     private MenuController menuController;
 
-    public LoginController(Bank bank) {
-        super(bank);
+    public LoginController(CostumerServiceImpl costumerServiceImpl) {
+        super(costumerServiceImpl);
         loginView = new LoginView();
-        menuController = new MenuController(bank);
+        menuController = new MenuController(costumerServiceImpl);
     }
 
     @Override
     public void init() {
-        loginView.show(bank);
+        loginView.show(costumerServiceImpl);
         menuController.init();
     }
 }
