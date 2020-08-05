@@ -6,6 +6,7 @@ import org.academiadecodigo.javabank.services.AccountService;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.RollbackException;
+import java.util.Optional;
 
 /**
  * A JPA {@link AccountService} implementation
@@ -31,14 +32,13 @@ public class JpaAccountService extends AbstractJpaService<Account> implements Ac
 
             em.getTransaction().begin();
 
-            Account account = em.find(Account.class, id);
+            Optional<Account> account = Optional.ofNullable(em.find(Account.class, id));
 
-            if (account == null) {
+            if (!account.isPresent()) {
                 em.getTransaction().rollback();
-                throw new IllegalArgumentException("invalid account id");
             }
 
-            account.credit(amount);
+            account.orElseThrow(() -> new IllegalArgumentException("invalid account id")).credit(amount);
 
             em.getTransaction().commit();
 
@@ -66,14 +66,13 @@ public class JpaAccountService extends AbstractJpaService<Account> implements Ac
 
             em.getTransaction().begin();
 
-            Account account = em.find(Account.class, id);
+            Optional<Account> account = Optional.ofNullable(em.find(Account.class, id));
 
-            if (account == null) {
+            if (!account.isPresent()) {
                 em.getTransaction().rollback();
-                throw new IllegalArgumentException("invalid account");
             }
 
-            account.debit(amount);
+            account.orElseThrow(() -> new IllegalArgumentException("invalid account id")).debit(amount);
 
             em.getTransaction().commit();
 
@@ -101,18 +100,20 @@ public class JpaAccountService extends AbstractJpaService<Account> implements Ac
 
             em.getTransaction().begin();
 
-            Account srcAccount = em.find(Account.class, srcId);
-            Account dstAccount = em.find(Account.class, dstId);
+            Optional<Account> srcAccount = Optional.ofNullable(em.find(Account.class,srcId ));
+            Optional<Account> dstAccount = Optional.ofNullable(em.find(Account.class,dstId ));
 
-            if (srcAccount == null || dstAccount == null) {
+            if (!srcAccount.isPresent() || !dstAccount.isPresent()) {
                 em.getTransaction().rollback();
-                throw new IllegalArgumentException("invalid account id");
             }
 
+            srcAccount.orElseThrow(() -> new IllegalArgumentException("invalid account id"));
+            dstAccount.orElseThrow(() -> new IllegalArgumentException("invalid account id"));
+
             // make sure transaction can be performed
-            if (srcAccount.canDebit(amount) && dstAccount.canCredit(amount)) {
-                srcAccount.debit(amount);
-                dstAccount.credit(amount);
+            if (srcAccount.get().canDebit(amount) && dstAccount.get().canCredit(amount)) {
+                srcAccount.get().debit(amount);
+                dstAccount.get().credit(amount);
             }
 
             em.getTransaction().commit();

@@ -1,5 +1,6 @@
 package org.academiadecodigo.javabank.services.jpa;
 
+import org.academiadecodigo.javabank.model.AbstractModel;
 import org.academiadecodigo.javabank.model.Customer;
 import org.academiadecodigo.javabank.model.account.Account;
 import org.academiadecodigo.javabank.services.CustomerService;
@@ -8,7 +9,9 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * A JPA {@link CustomerService} implementation
@@ -32,20 +35,12 @@ public class JpaCustomerService extends AbstractJpaService<Customer> implements 
 
         try {
 
-            Customer customer = em.find(Customer.class, id);
+            Customer customer = Optional.ofNullable(em.find(Customer.class, id))
+                .orElseThrow(() -> new IllegalArgumentException("Customer does not exist"));
 
-            if (customer == null) {
-                throw new IllegalArgumentException("Customer does not exists");
-            }
-
-            List<Account> accounts = customer.getAccounts();
-
-            double balance = 0;
-            for (Account account : accounts) {
-                balance += account.getBalance();
-            }
-
-            return balance;
+            return customer.getAccounts().stream()
+                    .mapToDouble(Account::getBalance)
+                    .sum();
 
         } finally {
             if (em != null) {
@@ -64,21 +59,12 @@ public class JpaCustomerService extends AbstractJpaService<Customer> implements 
 
         try {
 
-            Set<Integer> accountIds = new HashSet<>();
+            Customer customer = Optional.ofNullable(em.find(Customer.class, id))
+                    .orElseThrow(() -> new IllegalArgumentException("Customer does not exist"));
 
-            Customer customer = em.find(Customer.class, id);
-
-            if (customer == null) {
-                throw new IllegalArgumentException("Customer does not exists");
-            }
-
-            List<Account> accounts = customer.getAccounts();
-
-            for (Account account : accounts) {
-                accountIds.add(account.getId());
-            }
-
-            return accountIds;
+            return customer.getAccounts().stream()
+                    .map(AbstractModel::getId)
+                    .collect(Collectors.toSet());
 
         } finally {
             if (em != null) {

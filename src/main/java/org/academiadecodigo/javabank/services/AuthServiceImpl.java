@@ -2,6 +2,9 @@ package org.academiadecodigo.javabank.services;
 
 import org.academiadecodigo.javabank.model.Customer;
 
+import java.util.Objects;
+import java.util.Optional;
+
 /**
  * An {@link AuthService} implementation
  */
@@ -25,14 +28,12 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public boolean authenticate(Integer id) {
 
-        Customer customer = customerService.get(id);
+        Optional<Customer> customer = Optional.ofNullable(customerService.get(id));
 
-        if (customer == null) {
-            return false;
-        }
+        customer.ifPresent(customer1 -> accessingCustomerId = customer1.getId());
 
-        accessingCustomerId = customer.getId();
-        return true;
+        return customer.isPresent();
+
     }
 
     /**

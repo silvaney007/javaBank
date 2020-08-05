@@ -5,6 +5,8 @@ import org.academiadecodigo.javabank.controller.NewAccountController;
 import org.academiadecodigo.javabank.controller.transaction.DepositController;
 import org.academiadecodigo.javabank.controller.transaction.WithdrawalController;
 
+import java.util.stream.Stream;
+
 /**
  * The possible operation types
  */
@@ -68,12 +70,8 @@ public enum UserOptions {
      */
     public static String[] getMessages() {
 
-        String[] messages = new String[values().length];
-
-        for (UserOptions option : values()) {
-            messages[option.getOption() - 1] = option.getMessage();
-        }
-
-        return messages;
+        return Stream.of(values())
+                .map(UserOptions::getMessage)
+                .toArray(String[]::new);
     }
 }
