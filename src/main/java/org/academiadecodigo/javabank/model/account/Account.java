@@ -32,6 +32,7 @@ public abstract class Account extends AbstractModel {
         return balance;
     }
 
+    @PersistenceUnit
     public abstract AccountType getAccountType();
 
     public boolean canDebit(double amount) {

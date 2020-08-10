@@ -5,6 +5,7 @@ import org.academiadecodigo.javabank.view.MainView;
 import org.academiadecodigo.javabank.view.Messages;
 import org.academiadecodigo.javabank.view.UserOptions;
 
+import javax.persistence.PersistenceUnit;
 import java.util.Map;
 
 /**
@@ -12,6 +13,7 @@ import java.util.Map;
  */
 public class MainController extends AbstractController {
 
+    @PersistenceUnit
     private Map<Integer, Controller> controllerMap;
 
     /**
