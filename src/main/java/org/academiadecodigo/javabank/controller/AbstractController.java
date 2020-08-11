@@ -3,6 +3,8 @@ package org.academiadecodigo.javabank.controller;
 import org.academiadecodigo.javabank.services.AuthService;
 import org.academiadecodigo.javabank.view.View;
 
+import javax.persistence.PersistenceUnit;
+
 /**
  * A generic controller to be used as a base for concrete controller implementations
  *
@@ -10,7 +12,9 @@ import org.academiadecodigo.javabank.view.View;
  */
 public abstract class AbstractController implements Controller {
 
+    @PersistenceUnit
     protected AuthService authService;
+    @PersistenceUnit
     protected View view;
 
     /**

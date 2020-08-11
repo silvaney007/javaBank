@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
-       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:util="http://www.springframework.org/schema/util"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/util https://www.springframework.org/schema/util/spring-util.xsd">
     <bean class="org.springframework.orm.jpa.support.PersistenceAnnotationBeanPostProcessor"/>
     <!-- c3p0 database connection pool management -->
     <bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource" destroy-method="close">
@@ -50,6 +50,8 @@
     <bean id="recipientDao" class="org.academiadecodigo.javabank.persistence.dao.jpa.JpaRecipientDao">
         <constructor-arg name="sm" ref="sessionManager"/>
     </bean>
+
+
     <!-- Different packages services -->
     <bean id="accountService" class="org.academiadecodigo.javabank.services.AccountServiceImpl">
         <property name="transactionManager" ref="transactionManager"/>
@@ -62,12 +64,16 @@
     <bean id="authService" class="org.academiadecodigo.javabank.services.AuthServiceImpl">
         <property name="customerService" ref="customerService"/>
     </bean>
+
+
     <!-- Different packages view -->
     <bean id="loginView" class="org.academiadecodigo.javabank.view.LoginView">
         <property name="loginController" ref="loginController"/>
+        <property name="prompt" ref="prompt"/>
     </bean>
     <bean id="mainView" class="org.academiadecodigo.javabank.view.MainView">
         <property name="mainController" ref="mainController"/>
+        <property name="prompt" ref="prompt"/>
     </bean>
     <bean id="balanceView" class="org.academiadecodigo.javabank.view.BalanceView">
         <property name="balanceController" ref="balanceController"/>
@@ -77,13 +83,17 @@
     </bean>
     <bean id="depositView" class="org.academiadecodigo.javabank.view.AccountTransactionView">
         <property name="transactionController" ref="depositController"/>
+        <property name="prompt" ref="prompt"/>
     </bean>
     <bean id="withdrawView" class="org.academiadecodigo.javabank.view.AccountTransactionView">
         <property name="transactionController" ref="withdrawController"/>
+        <property name="prompt" ref="prompt"/>
     </bean>
     <bean id="recipientView" class="org.academiadecodigo.javabank.view.RecipientsView">
         <property name="recipientsController" ref="recipientController"/>
     </bean>
+
+
     <!-- Different packages controller -->
     <bean id="loginController" class="org.academiadecodigo.javabank.controller.LoginController">
         <property name="view" ref="loginView"/>
@@ -134,21 +144,24 @@
             </map>
         </property>
     </bean>
+
+
     <!-- Different packages Prompt -->
     <bean id="prompt" class="org.academiadecodigo.bootcamp.Prompt">
-        <constructor-arg index="0" value=""/>
-        <constructor-arg index="1" ref="system.in"/>
+        <constructor-arg index="0" ref="in"/>
+        <constructor-arg index="1" ref="out"/>
     </bean>
-    <bean name="system.in">
-    </bean>
+    <util:constant id="in" static-field="java.lang.System.in"/>
+    <util:constant id="out" static-field="java.lang.System.out"/>
+
+
     <!-- Different packages Factory -->
     <bean id="accountFactory" class="org.academiadecodigo.javabank.factories.AccountFactory">
     </bean>
     <bean id="account" factory-bean="accountFactory"
           factory-method="createAccount">
-        <constructor-arg ref="accountType"></constructor-arg>
+        <constructor-arg ref="accountType"/>
     </bean>
     <bean name="accountType" class="org.academiadecodigo.javabank.model.account.AccountType">
     </bean>
-
 </beans>

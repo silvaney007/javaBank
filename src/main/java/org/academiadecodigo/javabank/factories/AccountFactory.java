@@ -6,6 +6,8 @@ import org.academiadecodigo.javabank.model.account.AccountType;
 import org.academiadecodigo.javabank.model.account.CheckingAccount;
 import org.academiadecodigo.javabank.model.account.SavingsAccount;
 
+import javax.persistence.PersistenceUnit;
+
 /**
  * A factory for creating accounts of different types
  */
@@ -17,6 +19,7 @@ public class AccountFactory {
      * @param accountType the account type
      * @return the new account
      */
+    @PersistenceUnit
     public Account createAccount(AccountType accountType) {
 
         Account newAccount;
