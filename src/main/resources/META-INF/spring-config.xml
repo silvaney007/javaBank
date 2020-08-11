@@ -135,7 +135,7 @@
     </bean>
     <bean id="controllerMap" class="org.academiadecodigo.javabank.controller.MainController">
         <property name="controllerMap">
-            <map>
+            <map key-type="java.lang.Integer" value-type="org.academiadecodigo.javabank.controller.Controller">
                 <entry key="1" value-ref="balanceController"/>
                 <entry key="2" value-ref="accountController"/>
                 <entry key="3" value-ref="depositController"/>
@@ -147,12 +147,12 @@
 
 
     <!-- Different packages Prompt -->
+    <util:constant id="in" static-field="java.lang.System.in"/>
+    <util:constant id="out" static-field="java.lang.System.out"/>
     <bean id="prompt" class="org.academiadecodigo.bootcamp.Prompt">
         <constructor-arg index="0" ref="in"/>
         <constructor-arg index="1" ref="out"/>
     </bean>
-    <util:constant id="in" static-field="java.lang.System.in"/>
-    <util:constant id="out" static-field="java.lang.System.out"/>
 
 
     <!-- Different packages Factory -->
