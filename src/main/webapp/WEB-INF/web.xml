@@ -8,13 +8,13 @@
     <display-name>Archetype Created Web Application</display-name>
 
     <servlet>
-        <servlet-name>HelloServlet</servlet-name>
-        <servlet-class>org.academiadecodigo.javabank.hello.HelloServlet</servlet-class>
+        <servlet-name>ControllerServlet</servlet-name>
+        <servlet-class>org.academiadecodigo.javabank.mvc.ControllerServlet</servlet-class>
     </servlet>
 
     <servlet-mapping>
-        <servlet-name>HelloServlet</servlet-name>
-        <url-pattern>/</url-pattern>
+        <servlet-name>ControllerServlet</servlet-name>
+        <url-pattern>/customer</url-pattern>
     </servlet-mapping>
 
 
