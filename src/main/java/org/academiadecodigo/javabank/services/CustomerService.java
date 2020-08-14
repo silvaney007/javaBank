@@ -49,4 +49,5 @@ public interface CustomerService {
      * @return the list of recipients of the customer
      */
     List<Recipient> listRecipients(Integer id);
+
 }
