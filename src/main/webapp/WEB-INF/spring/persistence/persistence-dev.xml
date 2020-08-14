@@ -10,7 +10,7 @@
     <!-- H2 console -->
     <bean id="h2WebServer" class="org.h2.tools.Server" factory-method="createWebServer" init-method="start"
           destroy-method="stop">
-        <constructor-arg value="-web,-webAllowOthers,-webDaemon,-webPort,${h2.port}"/>
+        <constructor-arg value="-web,-webAllowOthers,-webDaemon,-webPort,${dev.h2.port}"/>
     </bean>
 
     <bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
@@ -37,6 +37,7 @@
                 <entry key="hibernate.hbm2ddl.import_files" value="db/test-data.sql"/>
                 <entry key="hibernate.hbm2ddl.import_files_sql_extractor"
                        value="org.hibernate.tool.hbm2ddl.MultipleLinesSqlCommandExtractor"/>
+
             </map>
         </property>
     </bean>

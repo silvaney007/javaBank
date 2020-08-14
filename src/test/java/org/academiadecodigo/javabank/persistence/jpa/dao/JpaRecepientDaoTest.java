@@ -17,7 +17,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
 
-public class JpaRecipientDaoTest {
+public class JpaRecepientDaoTest {
 
     private JpaRecipientDao recipientDao;
     private EntityManager em;
