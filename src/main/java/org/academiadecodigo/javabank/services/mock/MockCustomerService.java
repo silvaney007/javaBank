@@ -71,4 +71,8 @@ public class MockCustomerService extends AbstractMockService<Customer> implement
         return modelMap.get(id).getRecipients();
     }
 
-  }
+    @Override
+    public void delete(Integer id) {
+    }
+
+}

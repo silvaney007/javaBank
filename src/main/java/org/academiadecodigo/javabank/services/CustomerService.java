@@ -50,4 +50,5 @@ public interface CustomerService {
      */
     List<Recipient> listRecipients(Integer id);
 
+    void delete(Integer id);
 }

@@ -21,6 +21,8 @@
                 <th>Last Name</th>
                 <th>Email</th>
                 <th>Phone</th>
+                <th>View</th>
+                <th>Delete</th>
             </tr>
             <tr th:each="customer : ${customers}">
                 <td th:text="${customer.id}"></td>
@@ -28,6 +30,8 @@
                 <td th:text="${customer.lastName}"></td>
                 <td th:text="${customer.email}"></td>
                 <td th:text="${customer.phone}"></td>
+                <td><a th:href="@{'/customer/' +  ${customer.id}}">View</a></td>
+                <td><a th:href="@{'/customer/' +  ${customer.id} + '/delete'}" onclick="return confirm('Are you sure you want to delete this item?');">Delete</a></td>
             </tr>
         </table>
     </div>
