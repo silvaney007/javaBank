@@ -1,14 +1,13 @@
 package org.academiadecodigo.javabank.services;
 
-import org.academiadecodigo.javabank.persistence.model.account.Account;
+import org.academiadecodigo.javabank.exceptions.AccountNotFoundException;
 import org.academiadecodigo.javabank.persistence.dao.AccountDao;
+import org.academiadecodigo.javabank.persistence.model.account.Account;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
-
-import static org.academiadecodigo.javabank.errors.ErrorMessage.ACCOUNT_NOT_FOUND;
 
 /**
  * An {@link AccountService} implementation
@@ -32,8 +31,15 @@ public class AccountServiceImpl implements AccountService {
      * @see AccountService#get(Integer)
      */
     @Override
-    public Account get(Integer id) {
-        return accountDao.findById(id);
+    public Account get(Integer id) throws AccountNotFoundException {
+
+        Account account = accountDao.findById(id);
+
+        if (account == null) {
+            throw new AccountNotFoundException();
+        }
+
+        return account;
     }
 
     /**
@@ -41,14 +47,14 @@ public class AccountServiceImpl implements AccountService {
      */
     @Transactional
     @Override
-    public void deposit(Integer id, double amount) {
+    public void deposit(Integer id, double amount) throws AccountNotFoundException {
 
-        Optional<Account> accountOptional = Optional.ofNullable(accountDao.findById(id));
+        Account account = Optional.ofNullable(accountDao.findById(id))
+                .orElseThrow(AccountNotFoundException::new);
 
-        accountOptional.orElseThrow(() -> new IllegalArgumentException("invalid account id"))
-                .credit(amount);
+        account.credit(amount);
 
-        accountDao.saveOrUpdate(accountOptional.get());
+        accountDao.saveOrUpdate(account);
     }
 
     /**
@@ -56,14 +62,10 @@ public class AccountServiceImpl implements AccountService {
      */
     @Transactional
     @Override
-    public void withdraw(Integer id, double amount) {
+    public void withdraw(Integer id, double amount) throws AccountNotFoundException {
 
         Account account = Optional.ofNullable(accountDao.findById(id))
-                .orElseThrow(() -> new IllegalArgumentException("invalid account id"));
-
-        if (!account.canWithdraw()) {
-            throw new IllegalArgumentException("invalid account type");
-        }
+                .orElseThrow(AccountNotFoundException::new);
 
         account.debit(amount);
 
@@ -75,13 +77,13 @@ public class AccountServiceImpl implements AccountService {
      */
     @Transactional
     @Override
-    public void transfer(Integer srcId, Integer dstId, double amount) {
+    public void transfer(Integer srcId, Integer dstId, double amount) throws AccountNotFoundException {
 
         Optional<Account> srcAccount = Optional.ofNullable(accountDao.findById(srcId));
         Optional<Account> dstAccount = Optional.ofNullable(accountDao.findById(dstId));
 
-        srcAccount.orElseThrow(() -> new IllegalArgumentException("invalid account id"));
-        dstAccount.orElseThrow(() -> new IllegalArgumentException("invalid account id"));
+        srcAccount.orElseThrow(AccountNotFoundException::new);
+        dstAccount.orElseThrow(AccountNotFoundException::new);
 
         // make sure transaction can be performed
         if (srcAccount.get().canDebit(amount) && dstAccount.get().canCredit(amount)) {
@@ -93,3 +95,5 @@ public class AccountServiceImpl implements AccountService {
         accountDao.saveOrUpdate(dstAccount.get());
     }
 }
+
+

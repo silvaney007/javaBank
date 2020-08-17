@@ -1,15 +1,18 @@
 package org.academiadecodigo.javabank.services;
 
+import org.academiadecodigo.javabank.exceptions.*;
+import org.academiadecodigo.javabank.persistence.dao.AccountDao;
+import org.academiadecodigo.javabank.persistence.dao.CustomerDao;
+import org.academiadecodigo.javabank.persistence.dao.RecipientDao;
 import org.academiadecodigo.javabank.persistence.model.Customer;
 import org.academiadecodigo.javabank.persistence.model.Recipient;
 import org.academiadecodigo.javabank.persistence.model.account.Account;
 import org.academiadecodigo.javabank.persistence.model.account.CheckingAccount;
-import org.academiadecodigo.javabank.persistence.dao.AccountDao;
-import org.academiadecodigo.javabank.persistence.dao.CustomerDao;
-import org.academiadecodigo.javabank.persistence.dao.RecipientDao;
+import org.academiadecodigo.javabank.persistence.model.account.SavingsAccount;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static junit.framework.TestCase.assertNotNull;
@@ -39,7 +42,7 @@ public class CustomerServiceImplTest {
     }
 
     @Test
-    public void testGet() {
+    public void testGet() throws JavaBankException {
 
         // setup
         int fakeId = 9999;
@@ -53,8 +56,18 @@ public class CustomerServiceImplTest {
         assertEquals(fakeCustomer, customer);
     }
 
+    @Test(expected = CustomerNotFoundException.class)
+    public void testInvalidGetCustomer() throws CustomerNotFoundException {
+
+        //setup
+        when(customerDao.findById(anyInt())).thenReturn(null);
+
+        //exercise
+        customerService.get(anyInt());
+    }
+
     @Test
-    public void testGetBalance() {
+    public void testGetBalance() throws JavaBankException {
 
         // setup
         int fakeId = 9999;
@@ -74,19 +87,72 @@ public class CustomerServiceImplTest {
         assertEquals(a1.getBalance() + a2.getBalance(), result, DOUBLE_PRECISION);
     }
 
-    @Test(expected = IllegalArgumentException.class)
-    public void testGetBalanceInvalidCustomer() {
+    @Test
+    public void testList() {
+
+        //setup
+        List<Customer> fakeList = mock(ArrayList.class);
+
+        when(customerDao.findAll()).thenReturn(fakeList);
+
+        //exercise
+        List<Customer> list = customerService.list();
+
+        //verify
+        assertNotNull(list);
+        verify(customerDao, times(1)).findAll();
+    }
+
+    @Test
+    public void testDelete() throws JavaBankException {
+
+        //setup
+        Customer fakeCustomer = new Customer();
+        int fakeCustomerId = 9999;
+        fakeCustomer.setId(fakeCustomerId);
+
+        when(customerDao.findById(fakeCustomerId)).thenReturn(fakeCustomer);
+
+        //exercise
+        customerService.delete(fakeCustomerId);
+
+        //verify
+        verify(customerDao, times(1)).delete(fakeCustomerId);
+    }
+
+    @Test(expected = AssociationExistsException.class)
+    public void testDeleteCustomerWithOpenAccount() throws JavaBankException {
+
+        //setup
+        Account a1 = new CheckingAccount();
+        a1.credit(100);
+        Customer fakeCustomer = new Customer();
+        int fakeCustomerId = 9999;
+        fakeCustomer.setId(fakeCustomerId);
+        fakeCustomer.getAccounts().add(0, a1);
+
+        when(customerDao.findById(fakeCustomerId)).thenReturn(fakeCustomer);
+
+        //exercise
+        customerService.delete(fakeCustomerId);
+
+        //verify
+        assertFalse(fakeCustomer.getAccounts().isEmpty());
+        verify(customerDao, times(1)).delete(fakeCustomerId);
+    }
+
+    @Test(expected = CustomerNotFoundException.class)
+    public void testGetBalanceInvalidCustomer() throws JavaBankException {
 
         // setup
         when(customerDao.findById(anyInt())).thenReturn(null);
 
         // exercise
         customerService.getBalance(1);
-
     }
 
     @Test
-    public void testListRecipients() {
+    public void testListRecipients() throws JavaBankException {
 
         // setup
         int fakeCustomerId = 9999;
@@ -104,8 +170,8 @@ public class CustomerServiceImplTest {
         assertEquals(1, recipients.size());
     }
 
-    @Test(expected = IllegalArgumentException.class)
-    public void testListRecipientsInvalidCustomerId() {
+    @Test(expected = CustomerNotFoundException.class)
+    public void testListRecipientsInvalidCustomer() throws JavaBankException {
 
         // setup
         when(customerDao.findById(anyInt())).thenReturn(null);
@@ -115,7 +181,7 @@ public class CustomerServiceImplTest {
     }
 
     @Test
-    public void testRemoveRecipient() {
+    public void testRemoveRecipient() throws JavaBankException {
 
         // setup
         int fakeCustomerId = 9999;
@@ -125,6 +191,7 @@ public class CustomerServiceImplTest {
         Customer fakeCustomer = spy(new Customer());
         Recipient fakeRecipient = new Recipient();
         Recipient fakeRecipient2 = new Recipient();
+        fakeRecipient.setId(fakeRecipientId);
         fakeRecipient.setCustomer(fakeCustomer);
         fakeRecipient2.setCustomer(fakeCustomer);
         fakeCustomer.getRecipients().add(fakeRecipient);
@@ -149,8 +216,8 @@ public class CustomerServiceImplTest {
 
     }
 
-    @Test(expected = IllegalArgumentException.class)
-    public void testRemoveRecipientInvalidCustomerId() {
+    @Test(expected = CustomerNotFoundException.class)
+    public void testRemoveRecipientInvalidCustomer() throws JavaBankException {
 
         // setup
         int fakeRecipientId = 8888;
@@ -162,8 +229,8 @@ public class CustomerServiceImplTest {
         customerService.removeRecipient(1, fakeRecipientId);
     }
 
-    @Test(expected = IllegalArgumentException.class)
-    public void testRemoveRecipientInvalidRecipientId() {
+    @Test(expected = RecipientNotFoundException.class)
+    public void testRemoveRecipientInvalidRecipient() throws JavaBankException {
 
         // setup
         int fakeCustomerId = 9999;
@@ -173,5 +240,92 @@ public class CustomerServiceImplTest {
 
         // exercise
         customerService.removeRecipient(fakeCustomerId, 1);
+    }
+
+    @Test(expected = RecipientNotFoundException.class)
+    public void testRemoveRecipientInvalidRecipientOwner() throws JavaBankException {
+
+        // setup
+        int fakeRecipientId = 8888;
+        Recipient fakeRecipient = new Recipient();
+
+        int fakeCustomerIdThatIsTryingToRemove = 9998;
+
+        int fakeCustomerId = 9999;
+        Customer fakeCustomer = new Customer();
+        fakeCustomer.setId(fakeCustomerId);
+
+        fakeRecipient.setCustomer(fakeCustomer);
+
+        when(recipientDao.findById(fakeRecipientId)).thenReturn(fakeRecipient);
+        when(customerDao.findById(fakeCustomerIdThatIsTryingToRemove)).thenReturn(fakeCustomer);
+
+        // exercise
+        customerService.removeRecipient(fakeCustomerIdThatIsTryingToRemove, fakeRecipientId);
+    }
+
+    @Test
+    public void testAddRecipient() throws JavaBankException {
+
+        // setup
+        int fakeCustomerId = 8888;
+        Customer fakeCustomer = new Customer();
+
+        Recipient fakeRecipient = new Recipient();
+
+        when(customerDao.findById(fakeCustomerId)).thenReturn(fakeCustomer);
+        when(accountDao.findById(fakeRecipient.getAccountNumber())).thenReturn(new SavingsAccount());
+
+        // exercise
+        customerService.addRecipient(fakeCustomerId, fakeRecipient);
+
+        // verify
+        assertTrue(customerService.get(fakeCustomerId).getRecipients().contains(fakeRecipient));
+    }
+
+    @Test(expected = CustomerNotFoundException.class)
+    public void testAddRecipientInvalidCustomer() throws JavaBankException {
+
+        // setup
+        int fakeCustomerId = 8888;
+
+        Recipient fakeRecipient = new Recipient();
+
+        when(customerDao.findById(fakeCustomerId)).thenReturn(null);
+
+        // exercise
+        customerService.addRecipient(fakeCustomerId, fakeRecipient);
+    }
+
+    @Test(expected = AccountNotFoundException.class)
+    public void testAddRecipientInvalidAccount() throws JavaBankException {
+
+        // setup
+        int fakeCustomerId = 8888;
+        Customer fakeCustomer = new Customer();
+
+        Recipient fakeRecipient = new Recipient();
+
+        when(customerDao.findById(fakeCustomerId)).thenReturn(fakeCustomer);
+        when(accountDao.findById(fakeRecipient.getAccountNumber())).thenReturn(null);
+
+        // exercise
+        customerService.addRecipient(fakeCustomerId, fakeRecipient);
+    }
+
+    @Test
+    public void testSave() {
+
+        //setup
+        Customer fakeCustomer = mock(Customer.class);
+
+        when(customerDao.saveOrUpdate(fakeCustomer)).thenReturn(fakeCustomer);
+
+        //exercise
+        Customer customer = customerService.save(fakeCustomer);
+
+        //verify
+        assertNotNull(customer);
+        verify(customerDao, times(1)).saveOrUpdate(fakeCustomer);
     }
 }
