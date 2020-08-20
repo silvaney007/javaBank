@@ -2,6 +2,7 @@ package org.academiadecodigo.javabank.controller;
 
 import org.academiadecodigo.javabank.command.CustomerDto;
 import org.academiadecodigo.javabank.command.RecipientDto;
+import org.academiadecodigo.javabank.controller.web.RecipientController;
 import org.academiadecodigo.javabank.converters.CustomerToCustomerDto;
 import org.academiadecodigo.javabank.converters.RecipientDtoToRecipient;
 import org.academiadecodigo.javabank.converters.RecipientToRecipientDto;

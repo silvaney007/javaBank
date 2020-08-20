@@ -5,6 +5,9 @@ import org.academiadecodigo.javabank.persistence.model.account.Account;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * A {@link Converter} implementation, responsible for {@link AccountDto} to {@link Account} type conversion
  */

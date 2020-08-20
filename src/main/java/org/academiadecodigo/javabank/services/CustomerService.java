@@ -6,6 +6,7 @@ import org.academiadecodigo.javabank.exceptions.CustomerNotFoundException;
 import org.academiadecodigo.javabank.exceptions.RecipientNotFoundException;
 import org.academiadecodigo.javabank.persistence.model.Customer;
 import org.academiadecodigo.javabank.persistence.model.Recipient;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 

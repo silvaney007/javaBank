@@ -120,6 +120,16 @@ public class Customer extends AbstractModel {
     }
 
     /**
+     * Gets the customer account by id
+     * @param id
+     * @return the account
+     */
+    public Account getAccount(Integer id) {
+        Integer realId = id-1;
+        return accounts.get(realId);
+    }
+
+    /**
      * Gets the customer accounts
      *
      * @return the accounts

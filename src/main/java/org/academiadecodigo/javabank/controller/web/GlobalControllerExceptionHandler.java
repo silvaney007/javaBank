@@ -1,4 +1,4 @@
-package org.academiadecodigo.javabank.controller;
+package org.academiadecodigo.javabank.controller.web;
 
 import org.academiadecodigo.javabank.exceptions.JavaBankException;
 import org.apache.logging.log4j.LogManager;

@@ -1,4 +1,4 @@
-package org.academiadecodigo.javabank.controller;
+package org.academiadecodigo.javabank.controller.web;
 
 import org.academiadecodigo.javabank.command.RecipientDto;
 import org.academiadecodigo.javabank.converters.CustomerToCustomerDto;
